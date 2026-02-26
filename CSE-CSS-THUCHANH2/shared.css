@@ -1,0 +1,36 @@
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 60px;
+}
+#page-logo a {
+  font-family: "Oleo Script", cursive;
+  font-size: 40px;
+  text-decoration: none;
+  color: #ffd700;
+  letter-spacing: 1px;
+}
+nav ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+nav li {
+  margin-left: 25px;
+}
+nav a {
+  text-decoration: none;
+  color: #ffd700;
+  font-weight: 500;
+  padding: 8px 18px;
+  border-radius: 6px;
+  transition: 0.3s ease;
+}
+nav a:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}

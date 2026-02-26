@@ -1,0 +1,112 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Quicksand", sans-serif;
+}
+#hero {
+  height: 100vh;
+  background-image: url("assets/ocean.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#hero-content {
+  width: 700px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 50px;
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+}
+#hero-content h1 {
+  font-family: "Raleway", sans-serif;
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+#hero-content p {
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+#hero-content a {
+  text-decoration: none;
+  background-color: #fcd34d;
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-weight: bold;
+  color: black;
+  transition: 0.3s ease;
+}
+#hero-content a:hover {
+  background-color: #fbbf24;
+}
+#highlights {
+  padding: 80px 0;
+  background: linear-gradient(to right, #dff6f9, #bfe9f9);
+  text-align: center;
+}
+#highlights h2 {
+  font-family: "Raleway", sans-serif;
+  font-size: 36px;
+  margin-bottom: 50px;
+  letter-spacing: 2px;
+}
+#destinations {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  list-style: none;
+  padding: 0;
+}
+.destination {
+  width: 280px;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+.destination:hover {
+  transform: translateY(-8px);
+}
+.destination img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+.destination p {
+  padding: 18px;
+  font-size: 18px;
+  margin: 0;
+}
+.destination strong {
+  color: #10b981;
+}
+footer {
+  background-color: #111;
+  padding: 40px 0;
+}
+footer ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+footer li {
+  margin: 0 20px;
+}
+footer img {
+  width: 30px;
+  height: 30px;
+  filter: brightness(0) invert(1);
+}

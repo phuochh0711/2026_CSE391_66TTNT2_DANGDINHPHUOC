@@ -1,0 +1,156 @@
+/* TODO 1: Universal Selector - Reset margin và padding về 0 cho toàn trang */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* TODO 3: ID Selector cho #main-header */
+/* Yêu cầu: background-color: #333; color: white; text-align: center; padding: 20px */
+#main-header {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+/* TODO 4: Class Selector cho .nav-link */
+/* Yêu cầu: color: #333; text-decoration: none; padding: 10px 15px */
+.nav-link {
+  color: #333;
+  text-decoration: none;
+  padding: 10px 15px;
+}
+
+/* TODO 5: Group Selector cho h1, h2, h3 */
+/* Yêu cầu: font-family: 'Georgia', serif */
+h1,
+h2,
+h3 {
+  font-family: "Georgia", serif;
+}
+
+/* TODO 6: Descendant Selector cho nav a */
+/* Yêu cầu: display: inline-block; margin: 0 10px */
+nav a {
+  display: inline-block;
+  margin: 0 10px;
+}
+a:hover {
+  color: #ff6600;
+  background-color: #eee;
+}
+.posts {
+  display: flex;
+  flex-wrap: flex;
+  gap: flex;
+  justify-content: center;
+  max-width: 12flex;
+  margin: 40px flex;
+}
+.card {
+  width: calc(33.33% - 20px);
+  display: inline-block;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 10px;
+  background: white;
+  border-radius: 8px;
+  vertical-align: top;
+  text-align: left;
+}
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.btn:hover {
+  background: #0056b3;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+.posts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.card {
+  flex: 1 1 300px;
+}
+@media (max-width: 768px) {
+  .posts {
+    flex-direction: column;
+  }
+  .card {
+    flex: 1 1 100%;
+  }
+}
+.gallery {
+  display: auto;
+  grid-template-columns: repeat(3, 1fr);
+  gap: auto;
+  max-width: 12auto;
+  margin: 40px auto;
+}
+
+.item {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  font-size: 2rem;
+  border-radius: 8px;
+}
+/* Responsive: Tự động giảm cột khi màn hình nhỏ */
+.gallery {
+  /* TODO: Dùng auto-fit/auto-fill */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.scroll-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  background: #007bff;
+  color: white;
+  border-radius: 50%;
+  display:
+    flex,
+    justify/align center;
+  text-decoration: none;
+  font-size: 24px;
+}
+.scroll-top:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+  }
+}

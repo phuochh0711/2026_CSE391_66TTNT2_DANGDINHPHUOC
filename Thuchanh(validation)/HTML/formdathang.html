@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Đặt Hàng</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 550px; margin: 40px auto; padding: 0 16px; }
+    h2 { text-align: center; }
+
+    .field { margin-bottom: 14px; }
+    .field label { display: block; margin-bottom: 4px; font-weight: bold; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;
+    }
+    .field input.error, .field select.error, .field textarea.error { border-color: red; }
+
+    .error-msg { color: red; font-size: 13px; margin-top: 3px; display: none; }
+    .error-msg.visible { display: block; }
+
+    .radio-group { display: flex; gap: 20px; }
+    .radio-group label { font-weight: normal; }
+
+    .char-count { font-size: 12px; color: #888; text-align: right; }
+    .char-count.over { color: red; }
+
+    #total-box { margin-bottom: 14px; }
+
+    #confirm-box { display: none; border: 1px solid #ccc; border-radius: 6px; padding: 16px; margin-top: 16px; }
+    #confirm-box table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+    #confirm-box td { padding: 5px 8px; border-bottom: 1px solid #eee; font-size: 14px; }
+    #confirm-box td:first-child { font-weight: bold; width: 40%; }
+    .confirm-btns { display: flex; gap: 10px; }
+    .confirm-btns button { flex: 1; padding: 9px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; color: white; }
+    #btn-confirm { background: green; }
+    #btn-cancel  { background: red; }
+
+    button[type="submit"] {
+      width: 100%; padding: 10px; background: #2563eb; color: white;
+      border: none; border-radius: 4px; font-size: 15px; cursor: pointer;
+    }
+
+    #success-screen { display: none; text-align: center; padding: 40px 0; }
+    #success-screen h2 { color: green; }
+  </style>
+</head>
+<body>
+
+<h2>🛒 Form Đặt Hàng</h2>
+
+<form id="order-form" novalidate>
+
+  <!-- Tên sản phẩm -->
+  <div class="field">
+    <label for="product">Tên sản phẩm</label>
+    <select id="product">
+      <option value="">-- Chọn sản phẩm --</option>
+      <option value="Áo thun">Áo thun – 150.000đ</option>
+      <option value="Quần jean">Quần jean – 350.000đ</option>
+      <option value="Giày thể thao">Giày thể thao – 500.000đ</option>
+      <option value="Túi xách">Túi xách – 250.000đ</option>
+      <option value="Mũ lưỡi trai">Mũ lưỡi trai – 120.000đ</option>
+    </select>
+    <div class="error-msg" id="err-product"></div>
+  </div>
+
+  <!-- Số lượng -->
+  <div class="field">
+    <label for="quantity">Số lượng</label>
+    <input type="number" id="quantity" placeholder="Nhập từ 1 đến 99" min="1" max="99">
+    <div class="error-msg" id="err-quantity"></div>
+  </div>
+
+  <!-- Tổng tiền -->
+  <div id="total-box">
+     Tổng tiền: <strong id="total-display">0 đ</strong>
+  </div>
+
+  <!-- Ngày giao hàng -->
+  <div class="field">
+    <label for="delivery-date">Ngày giao hàng</label>
+    <input type="date" id="delivery-date">
+    <div class="error-msg" id="err-delivery-date"></div>
+  </div>
+
+  <!-- Địa chỉ -->
+  <div class="field">
+    <label for="address">Địa chỉ giao hàng</label>
+    <input type="text" id="address" placeholder="Số nhà, đường, phường, quận...">
+    <div class="error-msg" id="err-address"></div>
+  </div>
+
+  <!-- Ghi chú -->
+  <div class="field">
+    <label for="note">Ghi chú (không bắt buộc)</label>
+    <textarea id="note" rows="3" placeholder="Ghi chú thêm..."></textarea>
+    <div class="char-count" id="char-count">0/200</div>
+    <div class="error-msg" id="err-note"></div>
+  </div>
+
+  <!-- Phương thức thanh toán -->
+  <div class="field">
+    <label>Phương thức thanh toán</label>
+    <div class="radio-group">
+      <label><input type="radio" name="payment" value="COD"> COD</label>
+      <label><input type="radio" name="payment" value="Chuyển khoản"> Chuyển khoản</label>
+      <label><input type="radio" name="payment" value="Ví điện tử"> Ví điện tử</label>
+    </div>
+    <div class="error-msg" id="err-payment"></div>
+  </div>
+
+  <button type="submit">Đặt Hàng</button>
+</form>
+
+<!-- DIV XÁC NHẬN -->
+<div id="confirm-box">
+  <h3>📋 Xác nhận đơn hàng</h3>
+  <table>
+    <tr><td>Sản phẩm:</td><td id="cf-product"></td></tr>
+    <tr><td>Số lượng:</td><td id="cf-quantity"></td></tr>
+    <tr><td>Tổng tiền:</td><td id="cf-total"></td></tr>
+    <tr><td>Ngày giao:</td><td id="cf-date"></td></tr>
+    <tr><td>Địa chỉ:</td><td id="cf-address"></td></tr>
+    <tr><td>Thanh toán:</td><td id="cf-payment"></td></tr>
+  </table>
+  <p>Bạn có chắc chắn muốn đặt hàng?</p>
+  <div class="confirm-btns">
+    <button id="btn-confirm">✅ Xác nhận</button>
+    <button id="btn-cancel">❌ Hủy</button>
+  </div>
+</div>
+
+<!-- THÀNH CÔNG -->
+<div id="success-screen">
+  <h2> Đặt hàng thành công!</h2>
+  <p>Sản phẩm: <strong id="success-product"></strong><br>
+     Tổng tiền: <strong id="success-total"></strong></p>
+</div>
+
+
+<script src="../JS/Formdathang.js"></script>
+</script>
+</body>
+</html>

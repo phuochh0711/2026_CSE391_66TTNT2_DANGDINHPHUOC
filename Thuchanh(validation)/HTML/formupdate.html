@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Đăng Ký Tài Khoản</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 0 16px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      .field {
+        margin-bottom: 16px;
+      }
+      .field label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: bold;
+      }
+      .field input[type="text"],
+      .field input[type="email"],
+      .field input[type="tel"],
+      .field input[type="password"] {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .field input.error {
+        border-color: red;
+      }
+
+      .error-msg {
+        color: red;
+        font-size: 13px;
+        margin-top: 4px;
+        display: none;
+      }
+      .error-msg.visible {
+        display: block;
+      }
+
+      /* Đếm ký tự họ tên */
+      .char-count {
+        font-size: 12px;
+        color: #888;
+        text-align: right;
+        margin-top: 2px;
+      }
+      .char-count.over {
+        color: red;
+      }
+      .password-wrap {
+        position: relative;
+      }
+      .password-wrap input {
+        padding-right: 36px;
+      }
+      .toggle-pw {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 16px;
+        user-select: none;
+      }
+      .strength-bar-wrap {
+        display: flex;
+        gap: 4px;
+        margin-top: 6px;
+      }
+      .strength-bar-wrap .bar {
+        flex: 1;
+        height: 6px;
+        border-radius: 3px;
+        background: #ddd;
+        transition: background 0.3s;
+      }
+      .strength-label {
+        font-size: 12px;
+        margin-top: 4px;
+      }
+
+      .radio-group {
+        display: flex;
+        gap: 16px;
+      }
+      .radio-group label {
+        font-weight: normal;
+      }
+
+      button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+      button[type="submit"]:hover {
+        background: #1d4ed8;
+      }
+
+      #success-screen {
+        display: none;
+        text-align: center;
+        padding: 40px 0;
+      }
+      #success-screen h2 {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Đăng Ký Tài Khoản</h2>
+
+    <form id="register-form" novalidate>
+      <!-- Họ và tên -->
+      <div class="field">
+        <label for="fullname">Họ và tên</label>
+        <input
+          type="text"
+          id="fullname"
+          placeholder="Nguyễn Văn An"
+          maxlength="50"
+        />
+        <div class="char-count" id="char-fullname">0/50</div>
+        <div class="error-msg" id="err-fullname"></div>
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="ten@domain.com" />
+        <div class="error-msg" id="err-email"></div>
+      </div>
+
+      <!-- Số điện thoại -->
+      <div class="field">
+        <label for="phone">Số điện thoại</label>
+        <input type="tel" id="phone" placeholder="0987654321" maxlength="10" />
+        <div class="error-msg" id="err-phone"></div>
+      </div>
+
+      <!-- Mật khẩu -->
+      <div class="field">
+        <label for="password">Mật khẩu</label>
+        <div class="password-wrap">
+          <input
+            type="password"
+            id="password"
+            placeholder="Tối thiểu 8 ký tự"
+          />
+          <span class="toggle-pw" id="toggle-password">👁</span>
+        </div>
+        <!-- Thanh strength -->
+        <div class="strength-bar-wrap">
+          <div class="bar" id="bar1"></div>
+          <div class="bar" id="bar2"></div>
+          <div class="bar" id="bar3"></div>
+        </div>
+        <div class="strength-label" id="strength-label"></div>
+        <div class="error-msg" id="err-password"></div>
+      </div>
+
+      <!-- Xác nhận mật khẩu -->
+      <div class="field">
+        <label for="confirm">Xác nhận mật khẩu</label>
+        <div class="password-wrap">
+          <input type="password" id="confirm" placeholder="Nhập lại mật khẩu" />
+          <span class="toggle-pw" id="toggle-confirm">👁</span>
+        </div>
+        <div class="error-msg" id="err-confirm"></div>
+      </div>
+
+      <!-- Giới tính -->
+      <div class="field">
+        <label>Giới tính</label>
+        <div class="radio-group">
+          <label><input type="radio" name="gender" value="male" /> Nam</label>
+          <label><input type="radio" name="gender" value="female" /> Nữ</label>
+          <label><input type="radio" name="gender" value="other" /> Khác</label>
+        </div>
+        <div class="error-msg" id="err-gender"></div>
+      </div>
+
+      <!-- Điều khoản -->
+      <div class="field">
+        <label>
+          <input type="checkbox" id="terms" />
+          Tôi đồng ý với điều khoản dịch vụ
+        </label>
+        <div class="error-msg" id="err-terms"></div>
+      </div>
+
+      <button type="submit">Đăng Ký</button>
+    </form>
+
+    <div id="success-screen">
+      <h2>Đăng ký thành công! 🎉</h2>
+      <p>Chào mừng bạn, <strong id="success-name"></strong>!</p>
+    </div>
+
+    <script>
+      // ================================================================
+      // TIỆN ÍCH
+      // ================================================================
+
+      function showError(fieldId, message) {
+        const errEl = document.getElementById("err-" + fieldId);
+        errEl.textContent = message;
+        errEl.classList.add("visible");
+        const input = document.getElementById(fieldId);
+        if (input) input.classList.add("error");
+      }
+
+      function clearError(fieldId) {
+        const errEl = document.getElementById("err-" + fieldId);
+        errEl.textContent = "";
+        errEl.classList.remove("visible");
+        const input = document.getElementById(fieldId);
+        if (input) input.classList.remove("error");
+      }
+
+      // ================================================================
+      // TÍNH NĂNG MỚI 1: ĐẾM KÝ TỰ HỌ TÊN
+      // ================================================================
+
+      document
+        .getElementById("fullname")
+        .addEventListener("input", function () {
+          const len = this.value.length;
+          const countEl = document.getElementById("char-fullname");
+          countEl.textContent = len + "/50";
+
+          // maxlength="50" đã chặn rồi nhưng vẫn đổi màu cảnh báo khi gần đạt
+          if (len >= 45) {
+            countEl.classList.add("over"); // chữ đỏ khi còn ≤ 5 ký tự
+          } else {
+            countEl.classList.remove("over");
+          }
+
+          clearError("fullname"); // xóa lỗi khi gõ lại
+        });
+
+      // ================================================================
+      // TÍNH NĂNG MỚI 2: HIỆN/ẨN MẬT KHẨU
+      // ================================================================
+
+      // Hàm dùng chung cho cả 2 ô password
+      function setupToggle(toggleId, inputId) {
+        document
+          .getElementById(toggleId)
+          .addEventListener("click", function () {
+            const input = document.getElementById(inputId);
+
+            if (input.type === "password") {
+              input.type = "text"; 
+              this.textContent = "hu"; 
+            } else {
+              input.type = "password"; 
+              this.textContent = "👁";
+            }
+          });
+      }
+
+      setupToggle("toggle-password", "password");
+      setupToggle("toggle-confirm", "confirm");
+      // TÍNH NĂNG MỚI : THANH MỨC ĐỘ MẠNH MẬT KHẨU
+      function checkStrength(val) {
+        // Mỗi tiêu chí đạt được = +1 điểm
+        let score = 0;
+
+        if (val.length >= 8) score++; // đủ độ dài
+        if (val.length >= 12) score++; // dài hơn thì cộng thêm
+        if (/[A-Z]/.test(val)) score++; // có chữ hoa
+        if (/[a-z]/.test(val)) score++; // có chữ thường
+        if (/[0-9]/.test(val)) score++; // có số
+        if (/[^a-zA-Z0-9]/.test(val)) score++; // có ký tự đặc biệt (!@#...)
+
+        // Phân loại theo điểm
+        if (score <= 2) return "weak";
+        if (score <= 4) return "medium";
+        return "strong";
+      }
+
+      function updateStrengthBar(val) {
+        const bar1 = document.getElementById("bar1");
+        const bar2 = document.getElementById("bar2");
+        const bar3 = document.getElementById("bar3");
+        const label = document.getElementById("strength-label");
+
+        // Reset tất cả về xám
+        bar1.style.background = "#ddd";
+        bar2.style.background = "#ddd";
+        bar3.style.background = "#ddd";
+
+        if (val === "") {
+          label.textContent = "";
+          return;
+        }
+
+        const level = checkStrength(val);
+
+        if (level === "weak") {
+          // Yếu: chỉ 1 thanh, màu đỏ
+          bar1.style.background = "red";
+          label.textContent = "Yếu";
+          label.style.color = "red";
+        } else if (level === "medium") {
+          // Trung bình: 2 thanh, màu vàng
+          bar1.style.background = "orange";
+          bar2.style.background = "orange";
+          label.textContent = "Trung bình";
+          label.style.color = "orange";
+        } else {
+          // Mạnh: 3 thanh, màu xanh
+          bar1.style.background = "green";
+          bar2.style.background = "green";
+          bar3.style.background = "green";
+          label.textContent = "Mạnh";
+          label.style.color = "green";
+        }
+      }
+
+      document
+        .getElementById("password")
+        .addEventListener("input", function () {
+          updateStrengthBar(this.value);
+          clearError("password");
+        });
+
+      function validateFullname() {
+        const val = document.getElementById("fullname").value.trim();
+        if (val === "") {
+          showError("fullname", "Họ và tên không được để trống.");
+          return false;
+        }
+        if (val.length < 3) {
+          showError("fullname", "Họ và tên phải có ít nhất 3 ký tự.");
+          return false;
+        }
+        if (!/^[a-zA-ZÀ-ỹ\s]+$/u.test(val)) {
+          showError(
+            "fullname",
+            "Họ và tên chỉ được chứa chữ cái và khoảng trắng.",
+          );
+          return false;
+        }
+        clearError("fullname");
+        return true;
+      }
+
+      function validateEmail() {
+        const val = document.getElementById("email").value.trim();
+        if (val === "") {
+          showError("email", "Email không được để trống.");
+          return false;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+          showError(
+            "email",
+            "Email không đúng định dạng (vd: ten@domain.com).",
+          );
+          return false;
+        }
+        clearError("email");
+        return true;
+      }
+
+      function validatePhone() {
+        const val = document.getElementById("phone").value.trim();
+        if (val === "") {
+          showError("phone", "Số điện thoại không được để trống.");
+          return false;
+        }
+        if (!/^0\d{9}$/.test(val)) {
+          showError(
+            "phone",
+            "Số điện thoại phải có 10 chữ số và bắt đầu bằng 0.",
+          );
+          return false;
+        }
+        clearError("phone");
+        return true;
+      }
+
+      function validatePassword() {
+        const val = document.getElementById("password").value;
+        if (val === "") {
+          showError("password", "Mật khẩu không được để trống.");
+          return false;
+        }
+        if (val.length < 8) {
+          showError("password", "Mật khẩu phải có ít nhất 8 ký tự.");
+          return false;
+        }
+        if (!/[A-Z]/.test(val)) {
+          showError("password", "Mật khẩu phải có ít nhất 1 chữ hoa.");
+          return false;
+        }
+        if (!/[a-z]/.test(val)) {
+          showError("password", "Mật khẩu phải có ít nhất 1 chữ thường.");
+          return false;
+        }
+        if (!/[0-9]/.test(val)) {
+          showError("password", "Mật khẩu phải có ít nhất 1 chữ số.");
+          return false;
+        }
+        clearError("password");
+        return true;
+      }
+
+      function validateConfirm() {
+        const pw = document.getElementById("password").value;
+        const val = document.getElementById("confirm").value;
+        if (val === "") {
+          showError("confirm", "Vui lòng xác nhận mật khẩu.");
+          return false;
+        }
+        if (val !== pw) {
+          showError("confirm", "Mật khẩu xác nhận không khớp.");
+          return false;
+        }
+        clearError("confirm");
+        return true;
+      }
+
+      function validateGender() {
+        const selected = document.querySelector('input[name="gender"]:checked');
+        if (!selected) {
+          showError("gender", "Vui lòng chọn giới tính.");
+          return false;
+        }
+        clearError("gender");
+        return true;
+      }
+
+      function validateTerms() {
+        const checked = document.getElementById("terms").checked;
+        if (!checked) {
+          showError("terms", "Bạn cần đồng ý với điều khoản để tiếp tục.");
+          return false;
+        }
+        clearError("terms");
+        return true;
+      }
+
+      document
+        .getElementById("fullname")
+        .addEventListener("blur", validateFullname);
+      document.getElementById("email").addEventListener("blur", validateEmail);
+      document.getElementById("phone").addEventListener("blur", validatePhone);
+      document
+        .getElementById("password")
+        .addEventListener("blur", validatePassword);
+      document
+        .getElementById("confirm")
+        .addEventListener("blur", validateConfirm);
+      document.querySelectorAll('input[name="gender"]').forEach(function (r) {
+        r.addEventListener("change", validateGender);
+      });
+      document
+        .getElementById("terms")
+        .addEventListener("change", validateTerms);
+
+      ["email", "phone", "confirm"].forEach(function (id) {
+        document.getElementById(id).addEventListener("input", function () {
+          clearError(id);
+        });
+      });
+
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const isValid =
+            validateFullname() &
+            validateEmail() &
+            validatePhone() &
+            validatePassword() &
+            validateConfirm() &
+            validateGender() &
+            validateTerms();
+
+          if (!isValid) return;
+
+          const name = document.getElementById("fullname").value.trim();
+          document.getElementById("register-form").style.display = "none";
+          document.getElementById("success-name").textContent = name;
+          document.getElementById("success-screen").style.display = "block";
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý điểm sinh viên</title>
+  </head>
+  <body>
+    <h2>Quản lý điểm sinh viên</h2>
+
+    <!-- Nhập liệu -->
+    <label for="name">Họ tên: </label>
+    <input type="text" placeholder="Nhập tên" id="name" />
+    <label for="score">Điểm: </label>
+    <input type="text" placeholder="Nhập điểm" id="score" />
+    <button id="add_btn">Thêm</button>
+
+    <br /><br />
+
+    <!-- Tìm kiếm & lọc -->
+    <label for="search">Tìm kiếm: </label>
+    <input type="text" placeholder="Nhập tên sinh viên..." id="search" />
+
+    <label for="filter_loai"> &nbsp; Xếp loại: </label>
+    <select id="filter_loai">
+      <option value="Tất cả">Tất cả</option>
+      <option value="Giỏi">Giỏi</option>
+      <option value="Khá">Khá</option>
+      <option value="Trung bình">Trung bình</option>
+      <option value="Yếu">Yếu</option>
+    </select>
+
+    <!-- Bảng -->
+    <table id="score_table" border="1" cellpadding="6" cellspacing="0">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Họ tên</th>
+          <th id="col_score" style="cursor: pointer">Điểm ▲▼</th>
+          <th>Xếp loại</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="score_table_body"></tbody>
+    </table>
+
+    <p id="stats"></p>
+
+    <script>
+      // ── Tham chiếu DOM ──────────────────────────────────────────
+      const nameInput = document.getElementById("name");
+      const scoreInput = document.getElementById("score");
+      const addBtn = document.getElementById("add_btn");
+      const tbody = document.getElementById("score_table_body");
+      const statsEl = document.getElementById("stats");
+      const searchInput = document.getElementById("search");
+      const filterLoai = document.getElementById("filter_loai");
+      const colScore = document.getElementById("col_score");
+
+      // ── Trạng thái ──────────────────────────────────────────────
+      let students = []; // mảng gốc, không bao giờ bị lọc
+      let filteredStudents = []; // mảng hiển thị sau filter + sort
+      let sortOrder = null; // null | "asc" | "desc"
+
+      // ── Helpers ─────────────────────────────────────────────────
+      function getXepLoai(diem) {
+        if (diem >= 8.5) return "Giỏi";
+        if (diem >= 7.0) return "Khá";
+        if (diem >= 5.0) return "Trung bình";
+        return "Yếu";
+      }
+
+      // ── applyFilters: lọc → tìm kiếm → sắp xếp ─────────────────
+      function applyFilters() {
+        const keyword = searchInput.value.trim().toLowerCase();
+        const loai = filterLoai.value;
+
+        // 1. Lọc theo xếp loại
+        let result = students.filter((sv) => {
+          if (loai === "Tất cả") return true;
+          return getXepLoai(sv.score) === loai;
+        });
+
+        // 2. Tìm kiếm theo tên
+        if (keyword) {
+          result = result.filter((sv) =>
+            sv.name.toLowerCase().includes(keyword),
+          );
+        }
+
+        // 3. Sắp xếp theo điểm
+        if (sortOrder === "asc") {
+          result.sort((a, b) => a.score - b.score);
+        } else if (sortOrder === "desc") {
+          result.sort((a, b) => b.score - a.score);
+        }
+
+        filteredStudents = result;
+        renderTable();
+      }
+      function renderTable() {
+        tbody.innerHTML = "";
+
+        if (filteredStudents.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:gray;">Không có kết quả</td></tr>`;
+          updateStats();
+          return;
+        }
+
+        filteredStudents.forEach((sv, idx) => {
+          const tr = document.createElement("tr");
+
+          if (sv.score < 5.0) {
+            tr.style.backgroundColor = "yellow";
+          }
+
+          // Lưu index gốc trong mảng students[] để xóa đúng
+          const originalIndex = students.indexOf(sv);
+
+          tr.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${sv.name}</td>
+            <td>${sv.score.toFixed(1)}</td>
+            <td>${getXepLoai(sv.score)}</td>
+            <td><button data-index="${originalIndex}">Xóa</button></td>
+          `;
+
+          tbody.appendChild(tr);
+        });
+
+        updateStats();
+      }
+
+      // ── updateStats: tính trên mảng gốc ─────────────────────────
+      function updateStats() {
+        const total = students.length;
+        if (total === 0) {
+          statsEl.textContent = "Tổng số sinh viên: 0 | Điểm trung bình: --";
+          return;
+        }
+        const avg = students.reduce((sum, sv) => sum + sv.score, 0) / total;
+        statsEl.textContent = `Tổng số sinh viên: ${total} | Điểm trung bình: ${avg.toFixed(2)}`;
+      }
+
+      // ── Thêm sinh viên ───────────────────────────────────────────
+      function addStudent() {
+        const name = nameInput.value.trim();
+        const scoreRaw = scoreInput.value.trim();
+        const score = parseFloat(scoreRaw);
+
+        if (!name) {
+          alert("Họ tên không được để trống!");
+          nameInput.focus();
+          return;
+        }
+        if (scoreRaw === "" || isNaN(score) || score < 0 || score > 10) {
+          alert("Điểm không hợp lệ! Vui lòng nhập số từ 0 đến 10.");
+          scoreInput.focus();
+          return;
+        }
+
+        students.push({ name, score });
+        applyFilters();
+
+        nameInput.value = "";
+        scoreInput.value = "";
+        nameInput.focus();
+      }
+
+      // ── Event listeners ──────────────────────────────────────────
+
+      addBtn.addEventListener("click", addStudent);
+
+      scoreInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addStudent();
+      });
+
+      // Tìm kiếm realtime
+      searchInput.addEventListener("input", applyFilters);
+
+      // Lọc theo xếp loại
+      filterLoai.addEventListener("change", applyFilters);
+
+      // Sắp xếp khi click tiêu đề cột Điểm
+      colScore.addEventListener("click", () => {
+        if (sortOrder === "asc") {
+          sortOrder = "desc";
+          colScore.textContent = "Điểm ▼";
+        } else {
+          sortOrder = "asc";
+          colScore.textContent = "Điểm ▲";
+        }
+        applyFilters();
+      });
+
+      // Event delegation: xóa sinh viên
+      tbody.addEventListener("click", (e) => {
+        if (e.target.tagName === "BUTTON") {
+          const index = parseInt(e.target.dataset.index);
+          students.splice(index, 1);
+          applyFilters();
+        }
+      });
+
+      // Khởi tạo
+      applyFilters();
+    </script>
+  </body>
+</html>
